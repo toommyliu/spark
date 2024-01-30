@@ -6,6 +6,8 @@ import type {
 import type { GetServerSidePropsContext } from "next";
 import titlecase from "@/util/titlecase";
 import Image from "next/image";
+import ChampionAbout from "@/components/champion/about";
+import ChampionBanner from "@/components/champion/banner";
 
 type Props = {
 	champion: ChampionsDataDragonDetails;
@@ -14,10 +16,10 @@ type Props = {
 
 const championIcon = (img: string, patch: string) =>
 	`https://ddragon.leagueoflegends.com/cdn/${patch}/img/champion/${img}`;
-const championSplash = (championName: string) =>
-	`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championName}.jpg`;
-const championBanner = (championName: string, skin: number = 0) =>
+const championSplash = (championName: string, skin: number = 0) =>
 	`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championName}_${skin}.jpg`;
+const championBanner = (championName: string, skin: number = 0) =>
+	`https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${skin}.jpg`;
 
 export async function getServerSideProps({
 	req,
@@ -73,18 +75,14 @@ export default function Page({ champion, additional_info }: Props) {
 	const { lore, passive, spells, tags, skins } = additional_info;
 
 	return (
-		<>
-			<Image
-				src={championIcon(image.full, version)}
-				alt={"picture"}
-				width={image.w}
-				height={image.h}
-			/>
-			<hr />
-			<div className="about">
-				{correctName}: {title}
-				<p>{lore}</p>
-				Classes: {tags.join(", ")}
+		<div id={correctName}>
+			<div id="about" className="flex flex-row">
+				<ChampionBanner
+					img={championBanner(id)}
+					w={308}
+					h={560}
+				/>
+				<ChampionAbout name={correctName} lore={lore} title={title} />
 			</div>
 			<hr />
 			<div className="abilities">
@@ -92,7 +90,7 @@ export default function Page({ champion, additional_info }: Props) {
 					<li>
 						{passive.name}: {passive.description}
 					</li>
-					{/* @ts-expect-error the typings are incorrect */}
+					{/* @ts-expect-error the typings are incorrect, this code works fine anyways 🤷‍♂️ */}
 					{spells.map((spell) => (
 						<li key={spell.id}>
 							{spell.name}: {spell.description}
@@ -101,7 +99,7 @@ export default function Page({ champion, additional_info }: Props) {
 				</ul>
 			</div>
 			<hr />
-			<div className="skins">
+			{/* <div className="skins">
 				skin count: {skins.length}
 				<div>
 					{skins.map((skin) => {
@@ -123,7 +121,7 @@ export default function Page({ champion, additional_info }: Props) {
 						);
 					})}
 				</div>
-			</div>
-		</>
+			</div> */}
+		</div>
 	);
 }
