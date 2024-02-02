@@ -6,7 +6,7 @@ type Props = {
 	h?: number;
 };
 
-export default function ChampionBanner({ img, w, h }: Props) {
+export default function ChampionBanner({ img, w = 308, h = 560 }: Props) {
 	return (
 		<div key="champion-banner" className="ml-5 mt-7 object-contain">
 			<Image

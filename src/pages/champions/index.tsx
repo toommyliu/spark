@@ -1,6 +1,8 @@
 import { lol_api } from "@/util/client";
 import { useRouter } from "next/router";
 import type { ChampionsDataDragonDetails } from "twisted/dist/models-dto";
+import { championIcon } from "@/util/images";
+import Image from "next/image";
 
 type Props = {
 	data: ChampionsDataDragonDetails;
@@ -16,25 +18,36 @@ export async function getServerSideProps() {
 }
 
 export default function Page({ data }: Props) {
+	console.log(data);
 	const router = useRouter();
 	return (
-		<>
-			<span>hello champions!</span>
-			<div className="grid grid-cols-4 gap-3 justify-items-center">
-				{Object.values(data).map((champion) => {
-					return (
-						<button
-							key={champion.id}
-							className="bg-blue-500 hover:bg-blue-700 text-white w-1/4 mt-3"
-							onClick={() => {
-								router.push(`/champions/${champion.id}`);
-							}}
-						>
-							{champion.name}
-						</button>
-					);
-				})}
-			</div>
-		</>
+		<div className="grid grid-cols-4 justify-items-center">
+			{Object.values(data).map((champion: ChampionsDataDragonDetails) => {
+				return (
+					<>
+						<div>
+							<button
+								key={champion.id}
+								className="text-black"
+								onClick={() => {
+									router.push(`/champions/${champion.id}`);
+								}}
+							>
+								<Image
+									alt={champion.name}
+									src={championIcon(
+										champion.image.full,
+										champion.version
+									)}
+									width={120}
+									height={120}
+								/>
+							</button>
+							<span>{champion.name}</span>
+						</div>
+					</>
+				);
+			})}
+		</div>
 	);
 }
